@@ -81,22 +81,40 @@ async def fetch_radar_latest(client: httpx.AsyncClient) -> Optional[dict[str, An
 
 
 async def fetch_radar_animation(client: httpx.AsyncClient) -> dict[str, Any]:
-    """URLs für die letzten 12 Radar-Frames (60 Minuten) zusammenstellen."""
+    """Radar-Frames: letzte 60 Min (beobachtet) + nächste 120 Min (WN-Nowcast)."""
     from datetime import datetime, timezone, timedelta
-    from zoneinfo import ZoneInfo
 
-    berlin = ZoneInfo("Europe/Berlin")
     now = datetime.now(timezone.utc)
+    minute = (now.minute // 5) * 5
+    now_rounded = now.replace(minute=minute, second=0, microsecond=0)
+
     frames = []
 
+    # Vergangene 60 Minuten (12 Frames × 5 Min)
     for i in range(12, 0, -1):
-        dt = now - timedelta(minutes=i * 5)
-        minute = (dt.minute // 5) * 5
-        dt = dt.replace(minute=minute, second=0, microsecond=0)
-        local_dt = dt.astimezone(berlin)
+        dt = now_rounded - timedelta(minutes=i * 5)
         frames.append({
             "timestamp": dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "label": local_dt.strftime("%H:%M"),
+            "layer": "dwd:Niederschlagsradar",
+            "is_forecast": False,
+        })
+
+    # Aktueller Zeitpunkt
+    now_index = len(frames)
+    frames.append({
+        "timestamp": now_rounded.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "layer": "dwd:Niederschlagsradar",
+        "is_forecast": False,
+        "is_now": True,
+    })
+
+    # Nowcast-Vorhersage: nächste 120 Minuten (24 Frames × 5 Min, WN-Produkt)
+    for i in range(1, 25):
+        dt = now_rounded + timedelta(minutes=i * 5)
+        frames.append({
+            "timestamp": dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "layer": "dwd:Radar_wn-product_1x1km_ger",
+            "is_forecast": True,
         })
 
     return {
@@ -104,4 +122,5 @@ async def fetch_radar_animation(client: httpx.AsyncClient) -> dict[str, Any]:
         "wms_url": "https://maps.dwd.de/geoserver/dwd/wms",
         "wms_layer": "dwd:Niederschlagsradar",
         "wms_time_param": True,
+        "now_index": now_index,
     }

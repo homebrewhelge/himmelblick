@@ -14,6 +14,21 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
 
+interface RadarFrame {
+  timestamp: string
+  layer: string
+  is_forecast: boolean
+  is_now?: boolean
+}
+
+interface RadarAnimationData {
+  frames: RadarFrame[]
+  wms_url: string
+  wms_layer: string
+  wms_time_param: boolean
+  now_index: number
+}
+
 interface Props {
   location: Location
 }
@@ -37,7 +52,6 @@ function WmsOverlay({
       version: '1.1.1',
       opacity: 0.7,
       attribution: '&copy; DWD',
-      ...(timestamp ? { TIME: timestamp } : {}),
     } as any)
     radar.addTo(map)
     radarRef.current = radar
@@ -59,13 +73,12 @@ function WmsOverlay({
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Update radar TIME parameter when frame changes
+  // Update layer name + TIME together so past↔forecast switch works without recreation
   useEffect(() => {
     if (!radarRef.current) return
-    radarRef.current.setParams({ TIME: timestamp ?? '' } as any)
-  }, [timestamp])
+    radarRef.current.setParams({ layers: layer, TIME: timestamp ?? '' } as any)
+  }, [layer, timestamp])
 
-  // Toggle wind layer
   useEffect(() => {
     if (!windRef.current) return
     if (showWind) {
@@ -78,6 +91,15 @@ function WmsOverlay({
   return null
 }
 
+// Format UTC ISO timestamp as HH:MM in the browser's local timezone
+function fmtTime(isoUtc: string): string {
+  return new Date(isoUtc).toLocaleTimeString('de-DE', {
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  })
+}
+
 export default function RadarMapInner({ location }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [frameIndex, setFrameIndex] = useState(0)
@@ -86,13 +108,19 @@ export default function RadarMapInner({ location }: Props) {
   const [showWind, setShowWind] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval>>()
 
-  const { data: animData } = useQuery('radar-animation', () => api.radarAnimation(), {
+  const { data: animData } = useQuery<RadarAnimationData>('radar-animation', () => api.radarAnimation() as Promise<RadarAnimationData>, {
     staleTime: 2 * 60 * 1000,
     refetchInterval: 2 * 60 * 1000,
   })
 
-  const frames = animData?.frames ?? []
+  const frames: RadarFrame[] = animData?.frames ?? []
+  const nowIndex: number = animData?.now_index ?? 0
   const currentFrame = frames[frameIndex]
+
+  // Jump to "now" when data first arrives
+  useEffect(() => {
+    if (animData) setFrameIndex(animData.now_index ?? 0)
+  }, [animData?.now_index]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (isPlaying && frames.length > 0) {
@@ -104,7 +132,6 @@ export default function RadarMapInner({ location }: Props) {
   }, [isPlaying, frames.length, speed])
 
   const wmsUrl = animData?.wms_url ?? 'https://maps.dwd.de/geoserver/dwd/wms'
-  const wmsLayer = animData?.wms_layer ?? 'dwd:Niederschlagsradar'
 
   return (
     <div className={styles.wrapper}>
@@ -116,18 +143,34 @@ export default function RadarMapInner({ location }: Props) {
         >
           {isPlaying ? '⏸' : '▶'}
         </button>
-        <span className={styles.frameLabel}>
-          {currentFrame?.label ?? '--:--'}
-        </span>
+        <div className={styles.frameLabelWrapper}>
+          <span className={styles.frameLabel}>
+            {currentFrame ? fmtTime(currentFrame.timestamp) : '--:--'}
+          </span>
+          {currentFrame?.is_forecast && (
+            <span className={styles.forecastBadge}>Vorhersage</span>
+          )}
+        </div>
         <div className={styles.frameBar}>
-          {frames.map((_, i) => (
-            <button
-              key={i}
-              className={`${styles.frameDot} ${i === frameIndex ? styles.frameDotActive : ''}`}
-              onClick={() => { setIsPlaying(false); setFrameIndex(i) }}
-              aria-label={`Frame ${i + 1}`}
-            />
-          ))}
+          {frames.map((frame, i) => {
+            const isNowSeparator = i === nowIndex + 1
+            return (
+              <React.Fragment key={i}>
+                {isNowSeparator && <div className={styles.nowSeparator} />}
+                <button
+                  className={[
+                    styles.frameDot,
+                    i === frameIndex ? styles.frameDotActive
+                      : frame.is_now ? styles.frameDotNow
+                      : frame.is_forecast ? styles.frameDotForecast
+                      : '',
+                  ].join(' ')}
+                  onClick={() => { setIsPlaying(false); setFrameIndex(i) }}
+                  aria-label={fmtTime(frame.timestamp)}
+                />
+              </React.Fragment>
+            )
+          })}
         </div>
         <select
           className={styles.speedSelect}
@@ -171,7 +214,7 @@ export default function RadarMapInner({ location }: Props) {
         />
         <WmsOverlay
           url={wmsUrl}
-          layer={wmsLayer}
+          layer={currentFrame?.layer ?? 'dwd:Niederschlagsradar'}
           timestamp={currentFrame?.timestamp}
           showWind={showWind}
         />
