@@ -83,7 +83,9 @@ async def fetch_radar_latest(client: httpx.AsyncClient) -> Optional[dict[str, An
 async def fetch_radar_animation(client: httpx.AsyncClient) -> dict[str, Any]:
     """URLs für die letzten 12 Radar-Frames (60 Minuten) zusammenstellen."""
     from datetime import datetime, timezone, timedelta
+    from zoneinfo import ZoneInfo
 
+    berlin = ZoneInfo("Europe/Berlin")
     now = datetime.now(timezone.utc)
     frames = []
 
@@ -91,9 +93,10 @@ async def fetch_radar_animation(client: httpx.AsyncClient) -> dict[str, Any]:
         dt = now - timedelta(minutes=i * 5)
         minute = (dt.minute // 5) * 5
         dt = dt.replace(minute=minute, second=0, microsecond=0)
+        local_dt = dt.astimezone(berlin)
         frames.append({
-            "timestamp": dt.isoformat(),
-            "label": dt.strftime("%H:%M"),
+            "timestamp": dt.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "label": local_dt.strftime("%H:%M"),
         })
 
     return {

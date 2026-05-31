@@ -7,8 +7,6 @@ import { api } from '@/services/api'
 import type { Location } from '@/types/weather'
 import styles from './RadarMapInner.module.css'
 
-// Leaflet Icon-Fix für Vite
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 delete (L.Icon.Default.prototype as any)._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
@@ -22,15 +20,75 @@ interface Props {
 
 const RADIUS_OPTIONS = [5, 10, 25]
 
+// Imperatively managed WMS layer — react-leaflet's WMSTileLayer
+// does not reliably update the TIME parameter on re-render.
+function WmsOverlay({
+  url, layer, timestamp, showWind,
+}: { url: string; layer: string; timestamp?: string; showWind: boolean }) {
+  const map = useMap()
+  const radarRef = useRef<L.TileLayer.WMS | null>(null)
+  const windRef = useRef<L.TileLayer.WMS | null>(null)
+
+  useEffect(() => {
+    const radar = L.tileLayer.wms(url, {
+      layers: layer,
+      format: 'image/png',
+      transparent: true,
+      version: '1.1.1',
+      opacity: 0.7,
+      attribution: '&copy; DWD',
+      ...(timestamp ? { TIME: timestamp } : {}),
+    } as any)
+    radar.addTo(map)
+    radarRef.current = radar
+
+    const wind = L.tileLayer.wms(url, {
+      layers: 'dwd:icon_reg025_fd_sl_uv10m_wmc_windbarbs',
+      format: 'image/png',
+      transparent: true,
+      version: '1.1.1',
+      opacity: 0.8,
+      attribution: '&copy; DWD',
+    } as any)
+    if (showWind) wind.addTo(map)
+    windRef.current = wind
+
+    return () => {
+      radar.remove()
+      wind.remove()
+    }
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Update radar TIME parameter when frame changes
+  useEffect(() => {
+    if (!radarRef.current) return
+    radarRef.current.setParams({ TIME: timestamp ?? '' } as any)
+  }, [timestamp])
+
+  // Toggle wind layer
+  useEffect(() => {
+    if (!windRef.current) return
+    if (showWind) {
+      windRef.current.addTo(map)
+    } else {
+      windRef.current.remove()
+    }
+  }, [showWind, map])
+
+  return null
+}
+
 export default function RadarMapInner({ location }: Props) {
   const [isPlaying, setIsPlaying] = useState(false)
   const [frameIndex, setFrameIndex] = useState(0)
   const [speed, setSpeed] = useState(500)
   const [radius, setRadius] = useState(10)
+  const [showWind, setShowWind] = useState(false)
   const intervalRef = useRef<ReturnType<typeof setInterval>>()
 
   const { data: animData } = useQuery('radar-animation', () => api.radarAnimation(), {
-    staleTime: 5 * 60 * 1000,
+    staleTime: 2 * 60 * 1000,
+    refetchInterval: 2 * 60 * 1000,
   })
 
   const frames = animData?.frames ?? []
@@ -47,18 +105,6 @@ export default function RadarMapInner({ location }: Props) {
 
   const wmsUrl = animData?.wms_url ?? 'https://maps.dwd.de/geoserver/dwd/wms'
   const wmsLayer = animData?.wms_layer ?? 'dwd:Niederschlagsradar'
-
-  const wmsParams: Record<string, string | number | boolean> = {
-    layers: wmsLayer,
-    format: 'image/png',
-    transparent: true,
-    version: '1.1.1',
-    opacity: 0.7,
-  }
-
-  if (currentFrame) {
-    wmsParams.TIME = currentFrame.timestamp
-  }
 
   return (
     <div className={styles.wrapper}>
@@ -93,6 +139,13 @@ export default function RadarMapInner({ location }: Props) {
           <option value={500}>Normal</option>
           <option value={250}>Schnell</option>
         </select>
+        <button
+          className={`${styles.radiusBtn} ${showWind ? styles.radiusBtnActive : ''}`}
+          onClick={() => setShowWind((v) => !v)}
+          title="Windpfeile ein/aus"
+        >
+          💨 Wind
+        </button>
         <div className={styles.radiusToggle}>
           {RADIUS_OPTIONS.map((r) => (
             <button
@@ -116,10 +169,11 @@ export default function RadarMapInner({ location }: Props) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         />
-        <TileLayer
-          url={`${wmsUrl}?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetMap&LAYERS=${wmsLayer}&FORMAT=image/png&TRANSPARENT=true&SRS=EPSG:4326&BBOX={bbox-epsg-3857}&WIDTH=256&HEIGHT=256`}
-          attribution="&copy; Deutscher Wetterdienst (DWD)"
-          opacity={0.65}
+        <WmsOverlay
+          url={wmsUrl}
+          layer={wmsLayer}
+          timestamp={currentFrame?.timestamp}
+          showWind={showWind}
         />
         <Marker position={[location.lat, location.lon]}>
           <Popup>{location.name}</Popup>

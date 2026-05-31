@@ -27,7 +27,7 @@ class Settings(BaseSettings):
     ttl_geocoding: int = 604800  # 7 Tage
     ttl_air_quality: int = 1800  # 30 Minuten
     ttl_astronomy: int = 3600    # 1 Stunde
-    ttl_radar: int = 300         # 5 Minuten
+    ttl_radar: int = 120         # 2 Minuten
 
     # HTTP-Client Timeout
     http_timeout: float = 10.0
