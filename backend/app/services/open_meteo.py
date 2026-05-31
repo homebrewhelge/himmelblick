@@ -24,8 +24,8 @@ HOURLY_VARS = [
 # Tägliche Variablen
 DAILY_VARS = [
     "temperature_2m_max", "temperature_2m_min", "apparent_temperature_max",
-    "apparent_temperature_min", "sunrise", "sunset", "moonrise", "moonset",
-    "moon_phase", "precipitation_sum", "rain_sum", "showers_sum",
+    "apparent_temperature_min", "sunrise", "sunset",
+    "precipitation_sum", "rain_sum", "showers_sum",
     "snowfall_sum", "precipitation_hours", "precipitation_probability_max",
     "windspeed_10m_max", "windgusts_10m_max", "winddirection_10m_dominant",
     "shortwave_radiation_sum", "et0_fao_evapotranspiration", "uv_index_max",
