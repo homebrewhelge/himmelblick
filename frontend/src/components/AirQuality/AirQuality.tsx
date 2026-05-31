@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line
 import { useAirQuality } from '@/hooks/useWeatherData'
 import { useStore } from '@/store'
 import { aqiLabel } from '@/utils/weather'

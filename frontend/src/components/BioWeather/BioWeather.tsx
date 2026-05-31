@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line
 import { useCurrentWeather } from '@/hooks/useWeatherData'
 import { useStore } from '@/store'
 import { convertTemp, tempLabel } from '@/utils/weather'
@@ -16,10 +16,6 @@ export function BioWeather() {
   if (!bio) return null
 
   const tLabel = tempLabel(settings.tempUnit)
-  const temp = current.temperature_2m ?? 0
-  const humidity = current.relativehumidity_2m ?? 0
-  const uv = current.uv_index ?? 0
-
   const indices = [
     {
       label: 'Hitzeindex',

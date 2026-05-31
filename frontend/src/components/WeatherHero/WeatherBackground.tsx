@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line
 import { getWeatherBackground } from '@/utils/weather'
 import styles from './WeatherBackground.module.css'
 

@@ -17,8 +17,8 @@ const ClimateHistory = lazy(() => import('@/components/ClimateHistory/ClimateHis
 const BioWeather = lazy(() => import('@/components/BioWeather/BioWeather').then((m) => ({ default: m.BioWeather })))
 
 export default function App() {
-  const { activeTab, settings, location: loc } = useStore()
-  const { requestGeolocation, setFromUrlParams, setSearchOpen } = useLocation()
+  const { activeTab, settings, location: loc, setSearchOpen } = useStore()
+  const { requestGeolocation, setFromUrlParams } = useLocation()
 
   // Beim Start URL-Parameter prüfen, dann Geolokation versuchen
   useEffect(() => {

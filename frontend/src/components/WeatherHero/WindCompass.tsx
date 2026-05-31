@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line
 import styles from './WindCompass.module.css'
 
 interface Props {

@@ -2,8 +2,13 @@ export interface Location {
   lat: number
   lon: number
   name: string
+  short_name?: string
   displayName?: string
   elevation?: number | null
+  place_id?: number
+  importance?: number
+  type?: string
+  address?: Record<string, string>
 }
 
 export interface CurrentWeather {

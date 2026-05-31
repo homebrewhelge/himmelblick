@@ -7,16 +7,6 @@ import { format, parseISO } from 'date-fns'
 import { de } from 'date-fns/locale'
 import styles from './DailyForecast.module.css'
 
-const MOON_PHASE_ICON: Record<string, string> = {
-  'Neumond': '🌑',
-  'Zunehmende Sichel': '🌒',
-  'Erstes Viertel': '🌓',
-  'Zunehmender Mond': '🌔',
-  'Vollmond': '🌕',
-  'Abnehmender Mond': '🌖',
-  'Letztes Viertel': '🌗',
-  'Abnehmende Sichel': '🌘',
-}
 
 function moonPhaseIcon(phase: number): string {
   if (phase < 0.03 || phase > 0.97) return '🌑'

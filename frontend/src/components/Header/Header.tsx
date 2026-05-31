@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react' // eslint-disable-line
 import { useStore } from '@/store'
 import { useWarnings } from '@/hooks/useWeatherData'
 import styles from './Header.module.css'

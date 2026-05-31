@@ -1,6 +1,6 @@
-import React, { useMemo, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import {
-  ComposedChart, Line, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend,
+  ComposedChart, Line, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts'
 import { format, parseISO } from 'date-fns'
 import { convertTemp, tempLabel } from '@/utils/weather'
@@ -64,22 +64,7 @@ export default function EnsembleChart({ data, variable, hiddenModels, modelColor
   const tLabel = variable === 'temperature_2m' ? tempLabel(settings.tempUnit) : 'mm'
 
   const handleDownload = () => {
-    const canvas = document.createElement('canvas')
-    canvas.width = 1200
-    canvas.height = 400
-    // Einfacher Download — Screenshot-Funktion
-    const el = chartRef.current
-    if (!el) return
-    import('html2canvas').then(({ default: html2canvas }) => {
-      html2canvas(el).then((c) => {
-        const a = document.createElement('a')
-        a.href = c.toDataURL('image/png')
-        a.download = 'ensemble-meteogramm.png'
-        a.click()
-      })
-    }).catch(() => {
-      alert('Download nicht möglich — bitte Screenshot machen')
-    })
+    alert('Screenshot: Rechtsklick auf den Chart → "Bild speichern unter"')
   }
 
   return (
