@@ -1,0 +1,66 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.warning {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1px solid rgba(255 255 255 / 0.1);
+}
+
+.warningHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  width: 100%;
+  text-align: left;
+  background: color-mix(in srgb, var(--warn-bg) 25%, transparent);
+  border-left: 4px solid var(--warn-bg);
+  color: var(--warn-color, var(--text-primary));
+  flex-wrap: wrap;
+}
+
+.levelBadge {
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  background: var(--warn-bg);
+  color: var(--warn-color);
+  flex-shrink: 0;
+}
+
+.headline {
+  flex: 1;
+  font-weight: 500;
+  font-size: 0.9rem;
+  min-width: 200px;
+}
+
+.time {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.chevron {
+  font-size: 0.75rem;
+  opacity: 0.7;
+  flex-shrink: 0;
+}
+
+.detail {
+  padding: 0.75rem 1rem;
+  background: rgba(0 0 0 / 0.2);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border-left: 4px solid var(--warn-bg);
+}
+
+.detail p { margin-bottom: 0.5rem; }
+.detail p:last-child { margin-bottom: 0; }
+
+.instruction { color: var(--text-secondary); }

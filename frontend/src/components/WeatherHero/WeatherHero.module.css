@@ -1,0 +1,175 @@
+.hero {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  padding: 2rem;
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease;
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.locationName {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.elevation {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-left: 0.25rem;
+}
+
+.updatedAt {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.mainBlock {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.iconAndTemp {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.mainIcon { filter: drop-shadow(0 4px 12px var(--accent-glow)); }
+
+.tempBlock {
+  display: flex;
+  flex-direction: column;
+}
+
+.temperature {
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 8vw, 6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.weatherLabel {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.apparentTemp {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+}
+
+.detailsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.detailCard {
+  background: rgba(255 255 255 / 0.05);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.detailIcon { font-size: 1.1rem; }
+.detailLabel { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; }
+.detailValue { font-size: 1rem; font-weight: 600; font-family: var(--font-heading); }
+.detailSub { font-size: 0.72rem; color: var(--text-muted); }
+
+.windRow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+  position: relative;
+  z-index: 1;
+}
+
+.windDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.windSpeed { font-size: 1.25rem; font-weight: 700; font-family: var(--font-heading); }
+.windDir { font-size: 0.875rem; color: var(--text-secondary); }
+.windGusts { font-size: 0.8rem; color: var(--text-muted); }
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  position: relative;
+  z-index: 1;
+}
+
+.chip {
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border: 1px solid var(--border);
+}
+
+.chipOk { background: rgba(34 197 94 / 0.15); border-color: rgba(34 197 94 / 0.3); color: #4ade80; }
+.chipBad { background: rgba(239 68 68 / 0.1); border-color: rgba(239 68 68 / 0.2); color: #f87171; }
+
+.skeleton {
+  height: 300px;
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  animation: shimmer 1.5s infinite;
+}
+
+.error {
+  padding: 2rem;
+  text-align: center;
+  border-radius: var(--radius);
+  border: 1px solid rgba(239 68 68 / 0.3);
+  color: #f87171;
+}
+
+.error button {
+  margin-top: 0.75rem;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-sm);
+  background: rgba(239 68 68 / 0.15);
+  border: 1px solid rgba(239 68 68 / 0.3);
+  color: #f87171;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

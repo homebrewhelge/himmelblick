@@ -1,0 +1,100 @@
+.section {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.title { font-size: 1.125rem; margin-bottom: 1rem; }
+
+.skeleton {
+  height: 400px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.dayCard {
+  border-bottom: 1px solid var(--border);
+}
+
+.dayCard:last-child { border-bottom: none; }
+
+.today > .dayHeader { background: rgba(59 130 246 / 0.06); }
+
+.dayHeader {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 40px 50px 36px 1fr auto auto 30px;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 0.5rem;
+  text-align: left;
+  transition: background 0.15s;
+}
+
+.dayHeader:hover { background: rgba(255 255 255 / 0.03); }
+
+.dayName {
+  font-weight: 600;
+  font-size: 0.875rem;
+  font-family: var(--font-heading);
+}
+
+.dayDate {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.dayLabel {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+
+.temps {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
+
+.tMax { font-weight: 700; font-size: 0.9rem; color: #f87171; }
+.tMin { font-weight: 500; font-size: 0.9rem; color: #60a5fa; }
+
+.tempBar { flex: 1; max-width: 80px; }
+.barTrack { height: 4px; border-radius: 2px; background: var(--border); position: relative; }
+.barFill { position: absolute; top: 0; height: 100%; border-radius: 2px; background: linear-gradient(to right, #60a5fa, #fbbf24, #f87171); }
+
+.precip { font-size: 0.75rem; color: #60a5fa; }
+.sun { font-size: 0.75rem; color: #fbbf24; }
+.moon { font-size: 1rem; }
+
+.detail {
+  padding: 0.75rem 0.5rem;
+  background: rgba(0 0 0 / 0.1);
+  border-top: 1px solid var(--border);
+}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 1rem;
+  font-size: 0.8rem;
+  max-width: 400px;
+}
+
+.detailGrid span:nth-child(odd) { color: var(--text-muted); }
+.detailGrid span:nth-child(even) { font-weight: 500; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

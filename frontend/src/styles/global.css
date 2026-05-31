@@ -1,0 +1,172 @@
+/* ─── Variablen ─── */
+:root {
+  --font-heading: 'Syne', system-ui, sans-serif;
+  --font-body: 'DM Sans', system-ui, sans-serif;
+
+  /* Farben — Hell */
+  --bg-primary: #f0f4ff;
+  --bg-secondary: rgba(255 255 255 / 0.7);
+  --bg-card: rgba(255 255 255 / 0.55);
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #94a3b8;
+  --border: rgba(0 0 0 / 0.08);
+  --accent: #3b82f6;
+  --accent-glow: rgba(59 130 246 / 0.2);
+  --blur: 16px;
+  --shadow: 0 4px 24px rgba(0 0 0 / 0.08);
+  --radius: 16px;
+  --radius-sm: 8px;
+}
+
+[data-theme="dark"], [data-theme="storm"] {
+  --bg-primary: #0f172a;
+  --bg-secondary: rgba(15 23 42 / 0.8);
+  --bg-card: rgba(30 41 59 / 0.7);
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #475569;
+  --border: rgba(255 255 255 / 0.07);
+  --shadow: 0 4px 24px rgba(0 0 0 / 0.4);
+}
+
+[data-theme="storm"] {
+  --bg-primary: #070d1a;
+  --bg-card: rgba(15 23 42 / 0.8);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --bg-primary: #0f172a;
+    --bg-secondary: rgba(15 23 42 / 0.8);
+    --bg-card: rgba(30 41 59 / 0.7);
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #475569;
+    --border: rgba(255 255 255 / 0.07);
+    --shadow: 0 4px 24px rgba(0 0 0 / 0.4);
+  }
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  min-height: 100dvh;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font: inherit;
+  color: inherit;
+}
+
+a { color: inherit; text-decoration: none; }
+
+/* ─── Glassmorphism-Karte ─── */
+.glass {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+/* ─── Skeleton-Loader ─── */
+.skeleton-block {
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ─── Wetter-Icon Animationen ─── */
+.weather-icon.animated .icon-sun {
+  animation: spin-slow 20s linear infinite;
+  transform-origin: center;
+}
+
+.weather-icon.animated .icon-rain line,
+.weather-icon.animated .icon-rain ellipse {
+  animation: rain-fall 1s linear infinite;
+}
+
+.weather-icon.animated .icon-rain-heavy line {
+  animation: rain-fall 0.6s linear infinite;
+}
+
+.weather-icon.animated .icon-snow circle {
+  animation: snow-fall 2s ease-in-out infinite;
+}
+
+.weather-icon.animated .icon-lightning polygon {
+  animation: lightning-flash 2s ease-in-out infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes rain-fall {
+  0% { transform: translateY(-3px); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateY(5px); opacity: 0; }
+}
+
+@keyframes snow-fall {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(4px) rotate(180deg); }
+}
+
+@keyframes lightning-flash {
+  0%, 90%, 100% { opacity: 0.95; }
+  95% { opacity: 0.2; }
+}
+
+/* ─── no-animations Modus ─── */
+.no-animations * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* ─── Scrollbar-Styling ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Focus-Ring ─── */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+  border-radius: 4px;
+}

@@ -1,0 +1,25 @@
+.wrapper { position: relative; }
+
+.spreadLegend {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.75rem;
+}
+
+.spreadGood { color: #4ade80; }
+.spreadMid { color: #fbbf24; }
+.spreadHigh { color: #f87171; }
+
+.downloadBtn {
+  margin-left: auto;
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.75rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  transition: background 0.15s;
+}
+.downloadBtn:hover { background: var(--accent); color: white; border-color: var(--accent); }

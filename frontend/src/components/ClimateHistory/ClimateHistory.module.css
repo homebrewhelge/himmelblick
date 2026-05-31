@@ -1,0 +1,44 @@
+.section {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.title { font-size: 1.125rem; margin-bottom: 1rem; }
+
+.skeleton, .chartSkeleton {
+  height: 220px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.extremes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+}
+
+.extremeCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.875rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255 255 255 / 0.03);
+}
+
+.extremeIcon { font-size: 1.25rem; }
+.extremeLabel { font-size: 0.72rem; color: var(--text-muted); }
+.extremeValue { font-size: 1.1rem; font-weight: 700; font-family: var(--font-heading); }
+.extremeDate { font-size: 0.75rem; color: var(--text-secondary); }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

@@ -1,0 +1,97 @@
+.section {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.title {
+  font-size: 1.125rem;
+  margin-bottom: 1rem;
+}
+
+.skeleton, .chartSkeleton {
+  height: 220px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.scroll {
+  display: flex;
+  overflow-x: auto;
+  gap: 0;
+  padding-bottom: 0.5rem;
+  scrollbar-width: none;
+}
+.scroll::-webkit-scrollbar { display: none; }
+
+.hourCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.75rem 0.75rem;
+  min-width: 80px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+  flex-shrink: 0;
+}
+.hourCard:last-child { border-right: none; }
+
+.hourTime { font-size: 0.75rem; color: var(--text-muted); font-weight: 500; }
+.hourTemp { font-size: 0.9rem; font-weight: 600; }
+.hourPrecip { font-size: 0.7rem; color: #60a5fa; }
+.hourPrecipProb { font-size: 0.7rem; color: #93c5fd; }
+.hourWind { font-size: 0.7rem; color: var(--text-secondary); display: flex; align-items: center; gap: 0.2rem; }
+
+.cloudBar {
+  width: 40px; height: 8px;
+  border-radius: 2px;
+  overflow: hidden;
+  position: relative;
+  background: rgba(255 255 255 / 0.05);
+}
+
+.cloudLayer {
+  position: absolute;
+  inset: 0;
+}
+
+.cloudHigh { background: rgba(203 213 225 / 0.3); }
+.cloudMid { background: rgba(148 163 184 / 0.5); }
+.cloudLow { background: rgba(100 116 139 / 0.7); }
+
+.dayDivider {
+  flex-shrink: 0;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  align-self: flex-end;
+  border-right: 1px solid var(--border);
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+.sunEvent {
+  flex-shrink: 0;
+  padding: 0.4rem;
+  font-size: 0.65rem;
+  color: #fbbf24;
+  border-right: 1px solid rgba(251 191 36 / 0.2);
+  white-space: nowrap;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  align-self: flex-end;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

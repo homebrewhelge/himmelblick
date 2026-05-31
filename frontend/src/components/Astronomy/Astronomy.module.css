@@ -1,0 +1,67 @@
+.section {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.title { font-size: 1.125rem; margin-bottom: 1rem; }
+
+.skeleton {
+  height: 300px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: rgba(255 255 255 / 0.04);
+  border-bottom: 1px solid var(--border);
+}
+
+.cardIcon { font-size: 1.1rem; }
+.cardTitle { font-size: 0.9rem; font-weight: 600; }
+
+.cardBody { padding: 0.75rem 1rem; }
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid rgba(255 255 255 / 0.03);
+  gap: 0.5rem;
+}
+.row:last-child { border-bottom: none; }
+
+.rowLabel { font-size: 0.8rem; color: var(--text-muted); }
+.rowValue { font-size: 0.85rem; font-weight: 500; text-align: right; }
+
+.moonVisual {
+  display: flex;
+  justify-content: center;
+  padding: 0.5rem 0;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

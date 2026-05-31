@@ -1,0 +1,119 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: var(--bg-secondary);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .topBar { padding: 0.75rem 2rem; }
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo { color: var(--accent); }
+
+.brandName {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.warnBadge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #000;
+}
+
+.searchBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.875rem;
+  border-radius: 999px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  transition: background 0.2s;
+  max-width: 200px;
+  overflow: hidden;
+}
+
+.searchBtn:hover { background: var(--bg-secondary); }
+
+.locationLabel {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.themeBtn {
+  padding: 0.5rem;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  transition: background 0.2s;
+}
+.themeBtn:hover { background: var(--bg-card); }
+
+/* Tabs */
+.tabs {
+  display: flex;
+  overflow-x: auto;
+  gap: 0;
+  padding: 0 1rem;
+  max-width: 1400px;
+  margin: 0 auto;
+  width: 100%;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+@media (min-width: 768px) {
+  .tabs { padding: 0 2rem; }
+}
+
+.tab {
+  padding: 0.6rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  flex-shrink: 0;
+}
+
+.tab:hover { color: var(--text-primary); }
+
+.tabActive {
+  color: var(--accent);
+  border-bottom-color: var(--accent);
+  font-weight: 600;
+}

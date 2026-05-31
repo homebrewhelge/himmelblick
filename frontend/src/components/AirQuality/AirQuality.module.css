@@ -1,0 +1,62 @@
+.section {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.25rem; }
+.title { font-size: 1.125rem; }
+
+.aqiBadge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0.875rem;
+  border-radius: var(--radius-sm);
+  min-width: 70px;
+}
+
+.aqiValue { font-size: 1.25rem; font-weight: 800; font-family: var(--font-heading); color: white; }
+.aqiLabel { font-size: 0.7rem; font-weight: 600; color: rgba(255 255 255 / 0.85); }
+
+.skeleton {
+  height: 200px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.pollutantGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.875rem;
+}
+
+.pollutant {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: rgba(255 255 255 / 0.03);
+}
+
+.pollutantHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.4rem;
+}
+
+.pollutantLabel { font-size: 0.8rem; color: var(--text-secondary); }
+.pollutantValue { font-size: 0.875rem; font-weight: 600; }
+.pollutantValue.high { color: #f87171; }
+
+.pollutantBar { height: 4px; border-radius: 2px; background: var(--border); }
+.pollutantFill { height: 100%; border-radius: 2px; transition: width 0.5s ease; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

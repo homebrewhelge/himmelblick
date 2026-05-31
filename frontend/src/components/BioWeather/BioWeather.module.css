@@ -1,0 +1,71 @@
+.section {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.title { font-size: 1.125rem; }
+.subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 0.25rem 0 1.25rem; }
+
+.skeleton {
+  height: 300px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  background: rgba(255 255 255 / 0.03);
+  transition: border-color 0.2s;
+}
+
+.card.warn { border-color: rgba(239 68 68 / 0.4); background: rgba(239 68 68 / 0.05); }
+.card.unavailable { opacity: 0.5; }
+
+.cardLabel { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem; }
+.cardValue { font-size: 1.5rem; font-weight: 800; font-family: var(--font-heading); }
+.cardDesc { font-size: 0.72rem; color: var(--text-secondary); margin-top: 0.4rem; line-height: 1.4; }
+.cardNote { font-size: 0.7rem; color: var(--text-muted); margin-top: 0.3rem; font-style: italic; }
+
+.recs { }
+.recsTitle { font-size: 1rem; margin-bottom: 0.75rem; }
+
+.recGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 0.6rem;
+}
+
+.rec {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.7rem 0.875rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.recOk { background: rgba(34 197 94 / 0.1); border-color: rgba(34 197 94 / 0.25); }
+.recBad { background: rgba(239 68 68 / 0.08); border-color: rgba(239 68 68 / 0.2); }
+
+.recIcon { font-size: 1.25rem; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

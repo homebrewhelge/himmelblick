@@ -1,0 +1,4 @@
+.compass {
+  color: var(--text-primary);
+  flex-shrink: 0;
+}

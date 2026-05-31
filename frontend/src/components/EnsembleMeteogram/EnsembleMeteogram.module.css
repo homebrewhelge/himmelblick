@@ -1,0 +1,74 @@
+.section {
+  background: var(--bg-card);
+  backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+
+.header { margin-bottom: 1rem; }
+.title { font-size: 1.125rem; }
+.subtitle { font-size: 0.8rem; color: var(--text-muted); margin-top: 0.25rem; }
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  align-items: center;
+}
+
+.varToggle { display: flex; border: 1px solid var(--border); border-radius: var(--radius-sm); overflow: hidden; }
+.varBtn {
+  padding: 0.4rem 0.875rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  transition: background 0.15s;
+}
+.varBtn.active { background: var(--accent); color: white; }
+
+.modelLegend { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+
+.modelChip {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid color-mix(in srgb, var(--model-color) 40%, transparent);
+  background: color-mix(in srgb, var(--model-color) 15%, transparent);
+  color: var(--model-color);
+  transition: opacity 0.2s;
+}
+.modelChip:hover { opacity: 0.85; }
+.modelHidden { opacity: 0.35; }
+.modelFailed { opacity: 0.2; cursor: not-allowed; }
+
+.modelDot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--model-color);
+  flex-shrink: 0;
+}
+
+.skeleton, .error {
+  height: 320px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, rgba(255 255 255 / 0.05) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.error { color: #f87171; border: 1px solid rgba(239 68 68 / 0.3); }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
