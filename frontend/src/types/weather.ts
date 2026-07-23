@@ -151,6 +151,30 @@ export interface AstronomyData {
   elevation?: { elevation: number | null; unit: string }
 }
 
+export interface CurrentWeatherResponse {
+  current: CurrentWeather
+  bio: BioData
+}
+
+export interface HourlyResponse {
+  hourly: HourlyForecast
+}
+
+export interface ForecastResponse {
+  daily: DailyForecast
+  hourly: HourlyForecast
+}
+
+export interface HistoricalResponse {
+  daily: DailyForecast
+}
+
+export interface WarningsResponse {
+  warnings: Warning[]
+  raw_count?: number
+  error?: string
+}
+
 export type Theme = 'auto' | 'light' | 'dark' | 'storm'
 export type TempUnit = 'celsius' | 'fahrenheit'
 export type WindUnit = 'kmh' | 'ms' | 'beaufort' | 'knots'

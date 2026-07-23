@@ -1,3 +1,4 @@
+import asyncio
 import logging
 from typing import Any, Optional
 
@@ -85,33 +86,41 @@ async def fetch_forecast(lat: float, lon: float, days: int, client: httpx.AsyncC
     return resp.json()
 
 
+async def _fetch_ensemble_model(
+    model: str, lat: float, lon: float, ensemble_vars: list[str], client: httpx.AsyncClient
+) -> tuple[str, Any]:
+    try:
+        params = {
+            "latitude": lat,
+            "longitude": lon,
+            "hourly": ",".join(ensemble_vars),
+            "models": model,
+            "timezone": "auto",
+            "wind_speed_unit": "kmh",
+            "forecast_days": 7,
+        }
+        resp = await client.get(f"{settings.open_meteo_base}/forecast", params=params)
+        resp.raise_for_status()
+        return model, resp.json()
+    except Exception as e:
+        logger.warning(f"Ensemble-Modell {model} nicht verfügbar: {e}")
+        return model, None
+
+
 async def fetch_ensemble(lat: float, lon: float, client: httpx.AsyncClient) -> dict[str, Any]:
     """Alle 7 Wettermodelle parallel abrufen und als Ensemble zurückgeben."""
-    results: dict[str, Any] = {}
-    errors: list[str] = []
-
     ensemble_vars = [
         "temperature_2m", "precipitation", "windspeed_10m",
         "weathercode", "cloudcover",
     ]
 
-    for model in ENSEMBLE_MODELS:
-        try:
-            params = {
-                "latitude": lat,
-                "longitude": lon,
-                "hourly": ",".join(ensemble_vars),
-                "models": model,
-                "timezone": "auto",
-                "wind_speed_unit": "kmh",
-                "forecast_days": 7,
-            }
-            resp = await client.get(f"{settings.open_meteo_base}/forecast", params=params)
-            resp.raise_for_status()
-            results[model] = resp.json()
-        except Exception as e:
-            logger.warning(f"Ensemble-Modell {model} nicht verfügbar: {e}")
-            errors.append(model)
+    fetched = await asyncio.gather(*(
+        _fetch_ensemble_model(model, lat, lon, ensemble_vars, client)
+        for model in ENSEMBLE_MODELS
+    ))
+
+    results = {model: data for model, data in fetched if data is not None}
+    errors = [model for model, data in fetched if data is None]
 
     return {"models": results, "failed_models": errors}
 

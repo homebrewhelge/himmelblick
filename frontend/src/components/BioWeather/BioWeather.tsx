@@ -1,4 +1,3 @@
-import React from 'react' // eslint-disable-line
 import { useCurrentWeather } from '@/hooks/useWeatherData'
 import { useStore } from '@/store'
 import { convertTemp, tempLabel } from '@/utils/weather'
@@ -12,7 +11,6 @@ export function BioWeather() {
   if (isLoading) return <div className={styles.skeleton} />
 
   const bio = data?.bio
-  const current = data?.current ?? {}
   if (!bio) return null
 
   const tLabel = tempLabel(settings.tempUnit)

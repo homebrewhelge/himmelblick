@@ -7,12 +7,17 @@ import { api } from '@/services/api'
 import type { Location } from '@/types/weather'
 import styles from './RadarMapInner.module.css'
 
-delete (L.Icon.Default.prototype as any)._getIconUrl
+delete (L.Icon.Default.prototype as unknown as { _getIconUrl?: unknown })._getIconUrl
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 })
+
+// DWD's WMS supports a TIME dimension parameter not modeled by @types/leaflet's WMSParams
+interface TimeAwareWmsParams extends L.WMSParams {
+  TIME?: string
+}
 
 interface RadarFrame {
   timestamp: string
@@ -52,7 +57,7 @@ function WmsOverlay({
       version: '1.1.1',
       opacity: 0.7,
       attribution: '&copy; DWD',
-    } as any)
+    })
     radar.addTo(map)
     radarRef.current = radar
 
@@ -63,7 +68,7 @@ function WmsOverlay({
       version: '1.1.1',
       opacity: 0.8,
       attribution: '&copy; DWD',
-    } as any)
+    })
     if (showWind) wind.addTo(map)
     windRef.current = wind
 
@@ -76,7 +81,7 @@ function WmsOverlay({
   // Update layer name + TIME together so past↔forecast switch works without recreation
   useEffect(() => {
     if (!radarRef.current) return
-    radarRef.current.setParams({ layers: layer, TIME: timestamp ?? '' } as any)
+    radarRef.current.setParams({ layers: layer, TIME: timestamp ?? '' } as TimeAwareWmsParams)
   }, [layer, timestamp])
 
   useEffect(() => {

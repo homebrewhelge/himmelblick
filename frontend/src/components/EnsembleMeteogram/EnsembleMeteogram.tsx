@@ -36,7 +36,8 @@ export function EnsembleMeteogram() {
   const toggleModel = (model: string) => {
     setHiddenModels((prev) => {
       const next = new Set(prev)
-      next.has(model) ? next.delete(model) : next.add(model)
+      if (next.has(model)) next.delete(model)
+      else next.add(model)
       return next
     })
   }

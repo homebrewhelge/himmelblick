@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { useStore } from '@/store'
 import { api } from '@/services/api'
 import type { Location } from '@/types/weather'
@@ -21,18 +21,21 @@ export function SearchBar() {
     }
   }, [searchOpen])
 
+  const requestIdRef = useRef(0)
+
   const search = useCallback((q: string) => {
     clearTimeout(timeoutRef.current)
     if (q.length < 2) { setResults([]); return }
+    const requestId = ++requestIdRef.current
     timeoutRef.current = setTimeout(async () => {
       setLoading(true)
       try {
         const res = await api.geocode(q) as { results: Location[] }
-        setResults(res.results ?? [])
+        if (requestId === requestIdRef.current) setResults(res.results ?? [])
       } catch {
-        setResults([])
+        if (requestId === requestIdRef.current) setResults([])
       } finally {
-        setLoading(false)
+        if (requestId === requestIdRef.current) setLoading(false)
       }
     }, 350)
   }, [])
@@ -73,10 +76,13 @@ export function SearchBar() {
           <ul className={styles.results} role="listbox">
             {results.map((loc, i) => (
               <li key={loc.place_id ?? i}>
-                <button
+                <div
                   className={styles.resultItem}
                   onClick={() => select(loc)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(loc) } }}
                   role="option"
+                  tabIndex={0}
+                  aria-selected={false}
                 >
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
@@ -94,7 +100,7 @@ export function SearchBar() {
                   >
                     {favorites.some((f) => Math.abs(f.lat - loc.lat) < 0.01) ? '★' : '☆'}
                   </button>
-                </button>
+                </div>
               </li>
             ))}
           </ul>

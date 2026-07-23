@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   ComposedChart, Line, Area, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts'
@@ -17,6 +17,15 @@ interface Props {
 
 export default function EnsembleChart({ data, variable, hiddenModels, modelColors, settings }: Props) {
   const chartRef = useRef<HTMLDivElement>(null)
+
+  // Maskenfarbe für das Unsicherheitsband an die Kartenhintergrundfarbe des
+  // aktiven Themes anpassen (statt einer hartkodierten dunklen Farbe, die im
+  // hellen Theme sichtbar durchscheinen würde)
+  const [maskColor, setMaskColor] = useState('rgba(15,23,42,0.5)')
+  useEffect(() => {
+    const bgCard = getComputedStyle(document.documentElement).getPropertyValue('--bg-card').trim()
+    if (bgCard) setMaskColor(bgCard)
+  }, [settings.theme])
 
   const chartData = useMemo(() => {
     const models = Object.entries(data.models).filter(([key]) => !hiddenModels.has(key))
@@ -118,7 +127,7 @@ export default function EnsembleChart({ data, variable, hiddenModels, modelColor
           />
           <Area
             dataKey="p10"
-            fill="rgba(15,23,42,0.5)"
+            fill={maskColor}
             stroke="none"
             activeDot={false}
           />

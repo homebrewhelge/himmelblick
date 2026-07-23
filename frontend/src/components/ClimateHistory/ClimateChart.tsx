@@ -1,4 +1,3 @@
-import React from 'react' // eslint-disable-line
 import {
   ComposedChart, Line, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts'

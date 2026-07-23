@@ -20,8 +20,10 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
+        // 'react'/'react-dom' werden bewusst nicht separat gechunkt: sie werden
+        // eager im Entry-Point importiert und landen ohnehin im Hauptbundle —
+        // ein eigener Chunk dafür blieb leer.
         manualChunks: {
-          'vendor-react': ['react', 'react-dom'],
           'vendor-charts': ['recharts'],
           'vendor-map': ['leaflet', 'react-leaflet'],
         },

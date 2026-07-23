@@ -78,8 +78,10 @@
   text-align: left;
   transition: background 0.15s;
   border-bottom: 1px solid var(--border);
+  cursor: pointer;
 }
 .resultItem:hover { background: var(--bg-card); }
+.resultItem:focus-visible { outline: 2px solid var(--accent, currentColor); outline-offset: -2px; }
 
 .resultText { flex: 1; min-width: 0; }
 .resultName { display: block; font-weight: 500; }

@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense, lazy } from 'react'
+import { useEffect, Suspense, lazy } from 'react'
 import { useStore } from '@/store'
 import { useLocation } from '@/hooks/useLocation'
 import { Header } from '@/components/Header/Header'
@@ -25,12 +25,12 @@ export default function App() {
     const hasUrlParams = setFromUrlParams()
     if (!hasUrlParams) {
       requestGeolocation()
-      if (!loc) {
-        // Suchfeld öffnen wenn kein Standort
-        setTimeout(() => setSearchOpen(true), 500)
-      }
+      // Suchfeld öffnen wenn nach kurzer Wartezeit noch kein Standort ermittelt wurde
+      setTimeout(() => {
+        if (!useStore.getState().location) setSearchOpen(true)
+      }, 500)
     }
-  }, [])
+  }, [requestGeolocation, setFromUrlParams, setSearchOpen])
 
   // Theme-Klasse auf <html> setzen
   useEffect(() => {

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { useWarnings } from '@/hooks/useWeatherData'
 import { useStore } from '@/store'
 import type { Warning } from '@/types/weather'
@@ -17,7 +17,7 @@ export function WarningBanner() {
   const { data } = useWarnings(location)
   const [expanded, setExpanded] = useState<number | null>(null)
 
-  const warnings: Warning[] = data?.warnings ?? []
+  const warnings: Warning[] = useMemo(() => data?.warnings ?? [], [data?.warnings])
   const maxLevel = warnings.reduce((m, w) => Math.max(m, w.level), 0)
 
   useEffect(() => {
@@ -31,7 +31,7 @@ export function WarningBanner() {
         }
       })
     }
-  }, [maxLevel])
+  }, [maxLevel, warnings])
 
   if (warnings.length === 0) return null
 

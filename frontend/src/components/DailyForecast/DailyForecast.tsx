@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useForecast } from '@/hooks/useWeatherData'
 import { useStore } from '@/store'
 import { WeatherIcon } from '@/components/icons/WeatherIcon'

@@ -41,9 +41,6 @@ def compute_humidex(temp_c: float, dewpoint_c: float) -> float | None:
     """Humidex (kanadisches Komfortmaß, gültig für T ≥ 20°C)."""
     if temp_c < 20:
         return None
-    e = 6.105 * math.exp(25.22 * (dewpoint_c - 273.16) / (dewpoint_c) if dewpoint_c > 0
-                          else 25.22 * (dewpoint_c / (dewpoint_c + 273.16)))
-    # Vereinfachte Näherung
     e = 6.1078 * math.exp(17.27 * dewpoint_c / (dewpoint_c + 237.3))
     humidex = temp_c + 0.5555 * (e - 10)
     return round(humidex, 1)

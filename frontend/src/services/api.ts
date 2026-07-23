@@ -46,6 +46,9 @@ export const api = {
   geocode: (q: string) =>
     get(`/geocode?q=${encodeURIComponent(q)}`),
 
+  reverseGeocode: (lat: number, lon: number) =>
+    get(`/geocode?lat=${lat}&lon=${lon}`),
+
   pollen: (lat: number, lon: number) =>
     get(`/pollen?lat=${lat}&lon=${lon}`),
 }

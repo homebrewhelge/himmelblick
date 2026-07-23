@@ -1,4 +1,4 @@
-import React, { Suspense, lazy } from 'react'
+import { Suspense, lazy } from 'react'
 import { useStore } from '@/store'
 import styles from './RadarMap.module.css'
 

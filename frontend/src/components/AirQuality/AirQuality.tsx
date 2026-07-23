@@ -1,4 +1,3 @@
-import React from 'react' // eslint-disable-line
 import { useAirQuality } from '@/hooks/useWeatherData'
 import { useStore } from '@/store'
 import { aqiLabel } from '@/utils/weather'
@@ -46,7 +45,7 @@ export function AirQuality() {
 
       <div className={styles.pollutantGrid}>
         {POLLUTANTS.map(({ key, label, unit, limit }) => {
-          const value = (hourly as Record<string, number[]>)[key]?.[i] ?? 0
+          const value = hourly[key]?.[i] ?? 0
           const percent = Math.min((value / limit) * 100, 100)
           const isHigh = percent > 80
 

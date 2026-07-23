@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException, Query
 
 from ..cache import cache_get, cache_set
 from ..config import settings
+from ..http_client import get_client
 from ..services import open_meteo
 from ..services.bio_weather import (
     compute_comfort_recommendations,
@@ -19,10 +20,6 @@ router = APIRouter(prefix="/api/weather", tags=["weather"])
 logger = logging.getLogger(__name__)
 
 
-def _get_client() -> httpx.AsyncClient:
-    return httpx.AsyncClient(timeout=settings.http_timeout)
-
-
 @router.get("/current")
 async def get_current(
     lat: float = Query(..., ge=-90, le=90),
@@ -33,21 +30,25 @@ async def get_current(
     if cached:
         return cached
 
-    async with _get_client() as client:
-        try:
-            data = await open_meteo.fetch_current(lat, lon, client)
-        except httpx.HTTPError as e:
-            logger.error(f"Open-Meteo Fehler (current): {e}")
-            raise HTTPException(502, "Wetterdaten momentan nicht verfügbar")
+    client = get_client()
+    try:
+        data = await open_meteo.fetch_current(lat, lon, client)
+    except httpx.HTTPError as e:
+        logger.error(f"Open-Meteo Fehler (current): {e}")
+        raise HTTPException(502, "Wetterdaten momentan nicht verfügbar")
 
     current = data.get("current", {})
     temp = current.get("temperature_2m")
-    humidity = current.get("relativehumidity_2m", 0)
-    wind_kmh = current.get("windspeed_10m", 0)
-    precip = current.get("precipitation", 0)
-    uv = current.get("uv_index", 0)
-    cloud = current.get("cloudcover", 0)
-    dewpoint = current.get("dewpoint_2m", temp)
+    # Werte können in der API-Antwort als null vorkommen (z. B. Datenlücken) —
+    # .get(key, default) greift nur wenn der Schlüssel ganz fehlt, nicht bei null
+    humidity = current.get("relativehumidity_2m") or 0
+    wind_kmh = current.get("windspeed_10m") or 0
+    precip = current.get("precipitation") or 0
+    uv = current.get("uv_index") or 0
+    cloud = current.get("cloudcover") or 0
+    dewpoint = current.get("dewpoint_2m")
+    if dewpoint is None:
+        dewpoint = temp
 
     result = {
         **data,
@@ -77,12 +78,12 @@ async def get_hourly(
     if cached:
         return cached
 
-    async with _get_client() as client:
-        try:
-            data = await open_meteo.fetch_hourly(lat, lon, hours, client)
-        except httpx.HTTPError as e:
-            logger.error(f"Open-Meteo Fehler (hourly): {e}")
-            raise HTTPException(502, "Stündliche Vorhersage momentan nicht verfügbar")
+    client = get_client()
+    try:
+        data = await open_meteo.fetch_hourly(lat, lon, hours, client)
+    except httpx.HTTPError as e:
+        logger.error(f"Open-Meteo Fehler (hourly): {e}")
+        raise HTTPException(502, "Stündliche Vorhersage momentan nicht verfügbar")
 
     await cache_set(key, data, settings.ttl_hourly)
     return data
@@ -99,12 +100,12 @@ async def get_forecast(
     if cached:
         return cached
 
-    async with _get_client() as client:
-        try:
-            data = await open_meteo.fetch_forecast(lat, lon, days, client)
-        except httpx.HTTPError as e:
-            logger.error(f"Open-Meteo Fehler (forecast): {e}")
-            raise HTTPException(502, "Vorhersage momentan nicht verfügbar")
+    client = get_client()
+    try:
+        data = await open_meteo.fetch_forecast(lat, lon, days, client)
+    except httpx.HTTPError as e:
+        logger.error(f"Open-Meteo Fehler (forecast): {e}")
+        raise HTTPException(502, "Vorhersage momentan nicht verfügbar")
 
     await cache_set(key, data, settings.ttl_forecast)
     return data
@@ -120,8 +121,8 @@ async def get_ensemble(
     if cached:
         return cached
 
-    async with _get_client() as client:
-        data = await open_meteo.fetch_ensemble(lat, lon, client)
+    client = get_client()
+    data = await open_meteo.fetch_ensemble(lat, lon, client)
 
     await cache_set(key, data, settings.ttl_ensemble)
     return data
@@ -138,12 +139,12 @@ async def get_historical(
     if cached:
         return cached
 
-    async with _get_client() as client:
-        try:
-            data = await open_meteo.fetch_historical(lat, lon, days, client)
-        except httpx.HTTPError as e:
-            logger.error(f"Open-Meteo Fehler (historical): {e}")
-            raise HTTPException(502, "Historische Daten momentan nicht verfügbar")
+    client = get_client()
+    try:
+        data = await open_meteo.fetch_historical(lat, lon, days, client)
+    except httpx.HTTPError as e:
+        logger.error(f"Open-Meteo Fehler (historical): {e}")
+        raise HTTPException(502, "Historische Daten momentan nicht verfügbar")
 
     await cache_set(key, data, settings.ttl_historical)
     return data

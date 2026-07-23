@@ -13,12 +13,11 @@ export function useLocation() {
       async (pos) => {
         const { latitude: lat, longitude: lon } = pos.coords
         try {
-          const result = await api.geocode(`${lat},${lon}`) as { results: Location[] }
-          const first = result.results?.[0]
+          const result = await api.reverseGeocode(lat, lon) as { name: string }
           setLocation({
             lat,
             lon,
-            name: first?.name ?? `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
+            name: result.name || `${lat.toFixed(2)}, ${lon.toFixed(2)}`,
           })
         } catch {
           setLocation({ lat, lon, name: `${lat.toFixed(2)}, ${lon.toFixed(2)}` })

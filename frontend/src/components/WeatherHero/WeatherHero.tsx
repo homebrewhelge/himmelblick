@@ -1,4 +1,3 @@
-import React from 'react' // eslint-disable-line
 import { useCurrentWeather } from '@/hooks/useWeatherData'
 import { useStore } from '@/store'
 import { WeatherIcon } from '@/components/icons/WeatherIcon'

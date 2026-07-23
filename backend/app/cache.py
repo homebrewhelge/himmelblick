@@ -48,3 +48,10 @@ async def cache_delete(key: str) -> None:
         await r.delete(key)
     except Exception as e:
         logger.warning(f"Cache-Löschfehler für {key}: {e}")
+
+
+async def close_redis() -> None:
+    global _redis
+    if _redis is not None:
+        await _redis.aclose()
+        _redis = None
